@@ -7,10 +7,17 @@
   let value = initialValue;
   let component;
   let height;
-  $: height = component && document.getElementById(component.id).scrollHeight;
+
+  $: height = component && document.getElementById(id).scrollHeight;
+
+  window.addEventListener('resize', function (event) {
+    height = document.getElementById(id).scrollHeight;
+    console.log(height);
+  });
 
   function rerunHeight() {
-    height = component && document.getElementById(component.id).scrollHeight;
+    console.log('rerunning');
+    height = document.getElementById(id).scrollHeight;
   }
 </script>
 

@@ -9,6 +9,8 @@
   import EditButton from '../assets/edit-svg.svelte';
   import SaveButton from '../assets/save-svg.svelte';
   import DeleteButton from '../assets/delete-svg.svelte';
+  import ArrowUpSvg from '../assets/arrow-up-svg.svelte';
+  import ArrowDownSvg from '../assets/arrow-down-svg.svelte';
   export let chapter;
 
   let { noteTypes } = settings;
@@ -17,10 +19,20 @@
   let editable = true;
 
   function handleEvent({ type }) {
-    if (type === 'expand') expanded = !expanded;
-    if (type === 'edit') {
-      expanded = true;
-      editable = !editable;
+    switch (type) {
+      case 'reorder-up':
+        activeBook.changeOrder(chapter.id, (chapter.sort_order -= 1));
+        break;
+      case 'reorder-down':
+        activeBook.changeOrder(chapter.id, (chapter.sort_order += 1));
+        break;
+      case 'expand':
+        expanded = !expanded;
+        break;
+      case 'edit':
+        expanded = true;
+        editable = !editable;
+        break;
     }
   }
 </script>
@@ -33,7 +45,7 @@
       {:else}
         <ChevronRight on:expand={handleEvent} />
       {/if}
-      <h2 class="chapter-title">Chapter {chapter.chapter_number}: {chapter.title}</h2>
+      <h2 class="chapter-title">Chapter {chapter.chapter_number}</h2>
       <TextArea
         placeholder={'Enter your chapter summary here. . .'}
         initialValue={chapter.summary}
@@ -46,6 +58,11 @@
         <SaveButton on:edit={handleEvent} />
       {/if}
       {#if editable}
+        <p transition:fly={{ x: 80, duration: 500 }} class="sort-order">{chapter.sort_order}</p>
+        <div transition:fly={{ x: 40, duration: 500 }} class="reorder-buttons">
+          <ArrowUpSvg on:reorder-up={handleEvent} />
+          <ArrowDownSvg on:reorder-down={handleEvent} />
+        </div>
         <div class="trash" transition:fly={{ x: -40, duration: 500 }}>
           <DeleteButton objectType={'chapter'} callback={() => activeBook.deleteChapter(chapter.id)} />
         </div>
@@ -68,7 +85,7 @@
       {/each}
     </div>
     <div class="note-container">
-      {#each chapter.notes as note}
+      {#each chapter.notes as note (note.id)}
         <Note chapterID={chapter.id} {note} {editable} />
       {/each}
     </div>
@@ -76,6 +93,25 @@
 </div>
 
 <style>
+  .sort-order {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
+    left: -45px;
+    font-size: 0.8rem;
+    color: var(--clr-main-lightText);
+    user-select: none;
+  }
+  .reorder-buttons {
+    display: flex;
+    flex-flow: column nowrap;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -40px;
+    z-index: -1;
+  }
   .trash {
     position: absolute;
     right: -70px;

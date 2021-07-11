@@ -11,14 +11,14 @@
 
   $: filtered = () => {
     return search.length === 0
-      ? $books.data.slice(0, 10)
+      ? $books.data
       : $books.data.filter((book) => {
           return (
             book.isbn === $activeBook?.isbn ||
             pinnedISBNs.includes(book.isbn) ||
             book.title.toLowerCase().startsWith(search.toLowerCase())
           );
-        }).slice(0, 10);
+        });
   };
 </script>
 

@@ -8,14 +8,11 @@
   export let note;
   export let editable;
   export let chapterID;
-  let initialHighlight = note.highlight;
-  let initialNotes = note.content;
 
-  let expanded = true;
+  let expanded = false;
 
   function handleEvent({ type }) {
     if (type === 'expand') expanded = !expanded;
-    if (type === 'delete') activeBook.deleteNote(chapterID, note.id);
   }
 </script>
 
@@ -25,7 +22,7 @@
     <TextArea
       {editable}
       id={`${chapterID}-${note.id}-highlight`}
-      initialValue={initialHighlight}
+      initialValue={note.highlight}
       placeholder={'Insert your highlight from the book here . . .'}
     />
     {#if expanded}
@@ -39,14 +36,14 @@
       <TextArea
         {editable}
         id={`${chapterID}-${note.id}-notes`}
-        initialValue={initialNotes}
+        initialValue={note.content}
         placeholder={'Insert your notes about this highlight here . . .'}
       />
     </div>
   {/if}
   {#if editable}
-    <div class="trash" transition:fly={{ x: -40, duration: 500 }}>
-      <DeleteButton objectType={'chapter'} callback={() => activeBook.deleteNote(chapterID, note.id)} />
+    <div transition:fly={{ x: -40, duration: 500 }} class="trash">
+      <DeleteButton objectType={'note'} callback={() => activeBook.deleteNote(chapterID, note.id)} />
     </div>
   {/if}
 </div>
@@ -58,6 +55,7 @@
     width: clamp(83px, 90%, 980px);
     margin-top: 0.3rem;
     align-items: flex-start;
+    position: relative;
   }
   .prefold {
     width: 100%;
@@ -77,10 +75,12 @@
   }
   .trash {
     position: absolute;
-    right: -70px;
+    right: -90px;
     height: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
     width: 1.5rem;
-    z-index: -1;
+    z-index: 1;
   }
   .my-notes {
     width: 80%;
@@ -88,6 +88,7 @@
     align-self: center;
     padding: 0.5rem 0rem;
     border-radius: 0px 0px 10px 10px;
+    box-shadow: 1px 2px 2px 1px #1a1a1ad9;
   }
   .quote {
     background-color: var(--clr-notes-quoteBackground);

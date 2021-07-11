@@ -46,7 +46,7 @@ let { colorScheme } = settings;
 
 // import data from '../example-data'
 // import data from "../../MOCK_DATA";
-import data from '../../SHORT_DATA'
+import data from "../../SHORT_DATA";
 
 export const books = readable(data, async function start(set) {
   let savedPins = data.filter((book) => book.pinned === true);
@@ -75,6 +75,15 @@ function handleBook() {
           (chapter) => chapter.id === chapterID
         );
         book.chapters.splice(chapterIndex, 1);
+        return book;
+      }),
+    changeOrder: (chapterID, newOrder) =>
+      update((book) => {
+        let chapterIndex = book.chapters.findIndex(
+          (chapter) => chapter.id === chapterID
+        );
+        book.chapters[chapterIndex].sort_order = newOrder;
+        book.chapters.sort((a, b) => a.sort_order - b.sort_order);
         return book;
       }),
     updateNote: (chapterID, data) =>
