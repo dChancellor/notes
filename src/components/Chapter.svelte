@@ -1,73 +1,32 @@
 <script>
   import { fly, fade } from 'svelte/transition';
-  import { settings } from '../lib/config';
-  import { activeBook } from '../lib/store';
-  import Note from './Note.svelte';
-  import TextArea from './TextArea.svelte';
-  import ChevronDown from '../assets/chevron-down-svg.svelte';
-  import ChevronRight from '../assets/chevron-right-svg.svelte';
-  import EditButton from '../assets/edit-svg.svelte';
-  import SaveButton from '../assets/save-svg.svelte';
-  import DeleteButton from '../assets/delete-svg.svelte';
-  import ArrowUpSvg from '../assets/arrow-up-svg.svelte';
-  import ArrowDownSvg from '../assets/arrow-down-svg.svelte';
+  import { noteTypes } from '../lib/dictionary';
+  import { activeBook, editable } from '../lib/storeBook';
+  import ChevronButtons from './SubComponents/ChevronButtons.svelte';
+  import DeleteButton from './SubComponents/DeleteButton.svelte';
+  import EditButton from './SubComponents/EditButton.svelte';
+  import TextArea from './SubComponents/TextArea.svelte';
+  // import Note from './Note.svelte';
   export let chapter;
 
-  let { noteTypes } = settings;
-
   let expanded = true;
-  let editable = true;
-
-  function handleEvent({ type }) {
-    switch (type) {
-      case 'reorder-up':
-        activeBook.changeOrder(chapter.id, (chapter.sort_order -= 1));
-        break;
-      case 'reorder-down':
-        activeBook.changeOrder(chapter.id, (chapter.sort_order += 1));
-        break;
-      case 'expand':
-        expanded = !expanded;
-        break;
-      case 'edit':
-        expanded = true;
-        editable = !editable;
-        break;
-    }
-  }
 </script>
 
 <div class="chapter" out:fly={{ y: -40, duration: 500 }} in:fade={{ delay: 500, duration: 500 }}>
   <div class="prefold">
-    <div class="header-container">
-      {#if expanded}
-        <ChevronDown on:expand={handleEvent} />
-      {:else}
-        <ChevronRight on:expand={handleEvent} />
-      {/if}
-      <h2 class="chapter-title">Chapter {chapter.chapter_number}</h2>
-      <TextArea
-        placeholder={'Enter your chapter summary here. . .'}
-        initialValue={chapter.summary}
-        {editable}
-        id={`${chapter.id}-summary`}
-      />
-      {#if !editable}
-        <EditButton on:edit={handleEvent} />
-      {:else}
-        <SaveButton on:edit={handleEvent} />
-      {/if}
-      {#if editable}
-        <p transition:fly={{ x: 80, duration: 500 }} class="sort-order">{chapter.sort_order}</p>
-        <div transition:fly={{ x: 40, duration: 500 }} class="reorder-buttons">
-          <ArrowUpSvg on:reorder-up={handleEvent} />
-          <ArrowDownSvg on:reorder-down={handleEvent} />
-        </div>
-        <div class="trash" transition:fly={{ x: -40, duration: 500 }}>
-          <DeleteButton objectType={'chapter'} callback={() => activeBook.deleteChapter(chapter.id)} />
-        </div>
-      {/if}
-    </div>
+    <!-- <div class="header-container"> -->
+    <ChevronButtons direction={'right'} {expanded} on:expand={() => (expanded = !expanded)} />
+    <h2 class="chapter-header">Chapter {chapter.chapter_number}: &nbsp; {chapter.title}</h2>
+    <TextArea
+      placeholder={'Enter your chapter summary here. . .'}
+      value={chapter.summary}
+      id={`${chapter.id}-summary`}
+    />
+    <EditButton />
+    {#if $editable}
+      <DeleteButton object={chapter.id} />
+    {/if}
+    <!-- </div> -->
   </div>
   {#if expanded}
     <div class="addNew-container">
@@ -75,7 +34,7 @@
       {#each noteTypes as type}
         <button
           on:click={() => {
-            editable = true;
+            $editable = true;
             activeBook.addNote(chapter.id, type.name.toLowerCase());
           }}
           class="addNew-button button-{type.name}"
@@ -84,15 +43,18 @@
         </button>
       {/each}
     </div>
-    <div class="note-container">
-      {#each chapter.notes as note (note.id)}
-        <Note chapterID={chapter.id} {note} {editable} />
-      {/each}
-    </div>
   {/if}
 </div>
 
+<!-- <div class="note-container">
+      {#each chapter.notes as note (note.id)}
+        <Note chapterID={chapter.id} {note} {editable} />
+      {/each}
+    </div> -->
 <style>
+  .edit-container {
+    margin-left: auto;
+  }
   .sort-order {
     position: absolute;
     top: 50%;
@@ -112,13 +74,6 @@
     left: -40px;
     z-index: -1;
   }
-  .trash {
-    position: absolute;
-    right: -70px;
-    height: 1.5rem;
-    width: 1.5rem;
-    z-index: -1;
-  }
   .note-container {
     display: flex;
     flex-flow: column nowrap;
@@ -129,24 +84,22 @@
     display: flex;
     flex-flow: column nowrap;
     width: 90%;
-    margin: 2rem 0;
+    margin: 1rem 0;
     z-index: 2;
     position: relative;
   }
   .prefold {
     background-image: var(--clr-sidebar-background);
     border-radius: 10px;
-    padding: 0rem 1.2rem;
+    padding: .8rem 1.2rem;
     box-shadow: var(--clr-main-textAreaDropShadow);
-  }
-  .header-container {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     margin: 0.5rem 0 0.5rem -0.5rem;
     position: relative;
   }
-  .chapter-title {
+  .chapter-header {
     color: var(--clr-main-lightText);
   }
   .addNew-container {

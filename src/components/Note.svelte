@@ -4,7 +4,7 @@
   import ChevronDown from '../assets/chevron-down-svg.svelte';
   import ChevronLeft from '../assets/chevron-left-svg.svelte';
   import DeleteButton from '../assets/delete-svg.svelte';
-  import TextArea from './TextArea.svelte';
+  import TextArea from './SubComponents/TextArea.svelte';
   export let note;
   export let editable;
   export let chapterID;

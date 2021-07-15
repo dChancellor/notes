@@ -1,28 +1,24 @@
 <script>
-  export let editable;
-  export let initialValue;
+  import { onMount, afterUpdate, onDestroy, beforeUpdate } from 'svelte';
+
+  import { editable } from '../../lib/storeBook';
   export let placeholder;
   export let id;
+  export let value;
 
-  let value = initialValue;
-  let component;
   let height;
-
-  $: height = component && document.getElementById(id).scrollHeight;
-
-  window.addEventListener('resize', function (event) {
-    height = document.getElementById(id).scrollHeight;
-    console.log(height);
-  });
-
+  // This handles the resizing of the textarea & keeps everything vertically centered
+  let component;
   function rerunHeight() {
-    console.log('rerunning');
-    height = document.getElementById(id).scrollHeight;
+    height = component?.scrollHeight || 85;
   }
+  afterUpdate(() => {
+    rerunHeight();
+  });
 </script>
 
 <span style="height:{height}px;">
-  <textarea on:input={rerunHeight} bind:this={component} bind:value {id} rows="1" {placeholder} disabled={!editable} />
+  <textarea on:input={rerunHeight} bind:this={component} bind:value {id} rows="1" {placeholder} disabled={!$editable} />
 </span>
 
 <style>
@@ -33,6 +29,7 @@
     flex-grow: 3;
     margin: 0rem 2rem;
     border-radius: 6px;
+    background-color: rgba(33, 33, 33, 0.849);
   }
 
   textarea {
@@ -43,7 +40,6 @@
     border: none;
     border-radius: 5px;
     box-sizing: content-box;
-    line-height: 1.4rem;
     display: block;
     overflow: hidden;
   }
