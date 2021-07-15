@@ -87,6 +87,14 @@ function handleBook() {
         return findActive(book);
       }),
     clear: () => set(),
+    reorder: (chapters) =>
+      update((book) => {
+        chapters.forEach((chapter, index) => {
+          chapter.chapter_number = index + 1;
+        });
+        console.log("chapters", chapters);
+        return { ...book, ...{ chapters } };
+      }),
     addChapter: () =>
       update((book) =>
         book.chapters.push({

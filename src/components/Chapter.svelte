@@ -4,6 +4,7 @@
   import { activeBook, editable } from '../lib/storeBook';
   import ChevronButtons from './SubComponents/ChevronButtons.svelte';
   import DeleteButton from './SubComponents/DeleteButton.svelte';
+  import DraggableDots from './SubComponents/DraggableDots.svelte';
   import EditButton from './SubComponents/EditButton.svelte';
   import TextArea from './SubComponents/TextArea.svelte';
   // import Note from './Note.svelte';
@@ -14,7 +15,6 @@
 
 <div class="chapter" out:fly={{ y: -40, duration: 500 }} in:fade={{ delay: 500, duration: 500 }}>
   <div class="prefold">
-    <!-- <div class="header-container"> -->
     <ChevronButtons direction={'right'} {expanded} on:expand={() => (expanded = !expanded)} />
     <h2 class="chapter-header">Chapter {chapter.chapter_number}: &nbsp; {chapter.title}</h2>
     <TextArea
@@ -24,9 +24,9 @@
     />
     <EditButton />
     {#if $editable}
+      <DraggableDots />
       <DeleteButton object={chapter.id} />
     {/if}
-    <!-- </div> -->
   </div>
   {#if expanded}
     <div class="addNew-container">
@@ -43,43 +43,15 @@
         </button>
       {/each}
     </div>
-  {/if}
-</div>
-
-<!-- <div class="note-container">
+    <!-- <div class="note-container">
       {#each chapter.notes as note (note.id)}
         <Note chapterID={chapter.id} {note} {editable} />
       {/each}
     </div> -->
+  {/if}
+</div>
+
 <style>
-  .edit-container {
-    margin-left: auto;
-  }
-  .sort-order {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: -1;
-    left: -45px;
-    font-size: 0.8rem;
-    color: var(--clr-main-lightText);
-    user-select: none;
-  }
-  .reorder-buttons {
-    display: flex;
-    flex-flow: column nowrap;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: -40px;
-    z-index: -1;
-  }
-  .note-container {
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 0.1rem;
-    margin-top: 1rem;
-  }
   .chapter {
     display: flex;
     flex-flow: column nowrap;
@@ -87,11 +59,12 @@
     margin: 1rem 0;
     z-index: 2;
     position: relative;
+    color: var(--clr-main-lightText);
   }
   .prefold {
     background-image: var(--clr-sidebar-background);
     border-radius: 10px;
-    padding: .8rem 1.2rem;
+    padding: 0.8rem 1.2rem;
     box-shadow: var(--clr-main-textAreaDropShadow);
     display: flex;
     flex-flow: row nowrap;
@@ -99,12 +72,8 @@
     margin: 0.5rem 0 0.5rem -0.5rem;
     position: relative;
   }
-  .chapter-header {
-    color: var(--clr-main-lightText);
-  }
   .addNew-container {
     display: flex;
-    background-color: var(--clr-neutral-300);
     flex-flow: row wrap;
     align-items: center;
     width: 100%;
@@ -154,5 +123,11 @@
   }
   .button-Concept {
     background-image: var(--clr-notes-concept);
+  }
+  .note-container {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.1rem;
+    margin-top: 1rem;
   }
 </style>

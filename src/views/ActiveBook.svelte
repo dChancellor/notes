@@ -1,15 +1,15 @@
 <script>
+  import Chapters from '../lib/SortableList.svelte';
   import { activeBook, editable } from '../lib/storeBook';
   import { fade } from 'svelte/transition';
   import { bgFade } from '../lib/dictionary';
-  import Chapter from '../components/Chapter.svelte';
   import EditToggleButton from '../components/SubComponents/EditButton.svelte';
   import DeleteButton from '../components/SubComponents/DeleteButton.svelte';
 </script>
 
 <div class="app">
   {#if !$activeBook}
-    <h2 class="no-active-book">Select a book on the left to get started</h2>
+    <h2 in:fade={{ duration: 500 }} class="no-active-book">Select a book on the left to get started</h2>
   {:else}
     <div class="header">
       <EditToggleButton />
@@ -26,9 +26,8 @@
       {/if}
       <!-- END REVIEW -->
     </div>
-    {#each $activeBook.chapters as chapter (chapter.id)}
-      <Chapter {chapter} />
-    {/each}
+    <!-- REVIEW Perhaps clean this up and re-make it into universal tooling. But this works for now -->
+    <Chapters editable={$editable} />
   {/if}
 </div>
 
@@ -47,7 +46,6 @@
     max-width: 55vw;
     width: auto;
     position: relative;
-    height: 4rem;
     margin-bottom: 1.5rem;
   }
   .title {

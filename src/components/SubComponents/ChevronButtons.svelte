@@ -7,7 +7,7 @@
 
 <div class="chevron-container" on:click={() => dispatch('expand')}>
   {#if expanded}
-    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20">
       <title>A chevron pointed down indicating expanded chapter notes.</title>
       <path
         fill-rule="evenodd"
@@ -16,7 +16,7 @@
       />
     </svg>
   {:else if direction === 'right'}
-    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20">
       <title>A chevron pointed right indicating collapsed chapter notes.</title>
       <path
         fill-rule="evenodd"
@@ -25,7 +25,7 @@
       />
     </svg>
   {:else if direction === 'left'}
-    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="chevron" viewBox="0 0 20 20">
       <title>A chevron pointed left indicating collapsed chapter notes.</title>
       <path
         fill-rule="evenodd"
@@ -37,10 +37,14 @@
 </div>
 
 <style>
+  .chevron-container {
+    margin-right: 0.2rem;
+    display: flex;
+    align-content: center;
+    fill: var(--clr-main-lightText);
+    cursor: pointer;
+  }
   .chevron {
     height: 2rem;
-    cursor: pointer;
-    filter: invert(100%);
-    /* padding: 1rem; */
   }
 </style>
