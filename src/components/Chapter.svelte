@@ -1,5 +1,5 @@
 <script>
-  import { fly, fade } from 'svelte/transition';
+  import { fade } from 'svelte/transition';
   import { noteTypes } from '../lib/dictionary';
   import { activeBook, editable } from '../lib/storeBook';
   import ChevronButtons from './SubComponents/ChevronButtons.svelte';
@@ -7,13 +7,13 @@
   import DraggableDots from './SubComponents/DraggableDots.svelte';
   import EditButton from './SubComponents/EditButton.svelte';
   import TextArea from './SubComponents/TextArea.svelte';
-  // import Note from './Note.svelte';
+  import Note from './Note.svelte';
   export let chapter;
 
-  let expanded = true;
+  let expanded = false;
 </script>
 
-<div class="chapter" out:fly={{ y: -40, duration: 500 }} in:fade={{ delay: 500, duration: 500 }}>
+<div class="chapter" in:fade={{ duration: 200 }}>
   <div class="prefold">
     <ChevronButtons direction={'right'} {expanded} on:expand={() => (expanded = !expanded)} />
     <h2 class="chapter-header">Chapter {chapter.chapter_number}: &nbsp; {chapter.title}</h2>
@@ -21,11 +21,12 @@
       placeholder={'Enter your chapter summary here. . .'}
       value={chapter.summary}
       id={`${chapter.id}-summary`}
+      on:save={({ detail: content }) => (chapter.summary = content)}
     />
     <EditButton />
     {#if $editable}
       <DraggableDots />
-      <DeleteButton object={chapter.id} />
+      <DeleteButton id={chapter.id} type={'chapter'} />
     {/if}
   </div>
   {#if expanded}
@@ -43,11 +44,11 @@
         </button>
       {/each}
     </div>
-    <!-- <div class="note-container">
+    <div class="note-container">
       {#each chapter.notes as note (note.id)}
-        <Note chapterID={chapter.id} {note} {editable} />
+        <Note chapterID={chapter.id} {note} />
       {/each}
-    </div> -->
+    </div>
   {/if}
 </div>
 
@@ -71,6 +72,7 @@
     align-items: center;
     margin: 0.5rem 0 0.5rem -0.5rem;
     position: relative;
+    font-size: clamp(0.7rem, 1.2vw, 1rem);
   }
   .addNew-container {
     display: flex;
@@ -84,7 +86,7 @@
   .addNew-container p {
     margin: 0.8rem;
   }
-  @media (max-width: 990px) {
+  @media screen (max-width: 990px) {
     .addNew-container {
       justify-content: space-evenly;
     }

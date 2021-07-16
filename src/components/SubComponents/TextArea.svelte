@@ -1,13 +1,15 @@
 <script>
-  import { onMount, afterUpdate, onDestroy, beforeUpdate } from 'svelte';
-
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
+  import { afterUpdate } from 'svelte';
   import { editable } from '../../lib/storeBook';
   export let placeholder;
   export let id;
   export let value;
 
-  let height;
   // This handles the resizing of the textarea & keeps everything vertically centered
+  let height;
+  let outerWidth;
   let component;
   function rerunHeight() {
     height = component?.scrollHeight || 85;
@@ -17,8 +19,19 @@
   });
 </script>
 
+<svelte:window bind:outerWidth />
+
 <span style="height:{height}px;">
-  <textarea on:input={rerunHeight} bind:this={component} bind:value {id} rows="1" {placeholder} disabled={!$editable} />
+  <textarea
+    on:blur={dispatch('save', value)}
+    on:input={() => rerunHeight()}
+    bind:this={component}
+    bind:value
+    {id}
+    rows="1"
+    {placeholder}
+    disabled={!$editable}
+  />
 </span>
 
 <style>
@@ -30,6 +43,7 @@
     margin: 0rem 2rem;
     border-radius: 6px;
     background-color: rgba(33, 33, 33, 0.849);
+    max-height: 12rem;
   }
 
   textarea {

@@ -1,10 +1,10 @@
 <script>
   import { flip } from 'svelte/animate';
-  import { activeBook } from './storeBook';
+  import { activeBook, editable } from './storeBook';
   import Chapter from '../components/Chapter.svelte';
-  export let editable;
 
   let isOver = false;
+  // TODO - Explore the capabilities of adding touch to this
   const getDraggedParent = (node) =>
     node.dataset && node.dataset.index ? node.dataset : getDraggedParent(node.parentNode);
   const start = (ev) => {
@@ -40,12 +40,12 @@
       class="chapter-draggable-container"
       data-index={index}
       data-id={JSON.stringify(chapter.id)}
-      draggable={editable}
+      draggable={$editable}
       on:dragstart={start}
       on:dragover={over}
       on:dragleave={leave}
       on:drop={drop}
-      animate:flip={{ duration: 100 }}
+      animate:flip={{ duration: 500 }}
       class:over={chapter.id === isOver}
     >
       <Chapter {chapter} />

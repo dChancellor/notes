@@ -1,49 +1,37 @@
 <script>
-  import { activeBook } from '../lib/store';
+  import { activeBook, editable } from '../lib/storeBook';
   import { fly } from 'svelte/transition';
-  import ChevronDown from '../assets/chevron-down-svg.svelte';
-  import ChevronLeft from '../assets/chevron-left-svg.svelte';
-  import DeleteButton from '../assets/delete-svg.svelte';
   import TextArea from './SubComponents/TextArea.svelte';
+  import DeleteButton from './SubComponents/DeleteButton.svelte';
+  import ChevronButtons from './SubComponents/ChevronButtons.svelte';
   export let note;
-  export let editable;
   export let chapterID;
 
   let expanded = false;
-
-  function handleEvent({ type }) {
-    if (type === 'expand') expanded = !expanded;
-  }
 </script>
 
-<div in:fly={{ y: -40, duration: 500 }} class="note">
+<div in:fly={{ y: -40, duration: 500 }} out:fly={{ y: -10, duration: 400 }} class="note">
   <div class="prefold {note.note_type}">
     <p>{note.note_type[0].toUpperCase() + note.note_type.slice(1)}:</p>
     <TextArea
-      {editable}
       id={`${chapterID}-${note.id}-highlight`}
-      initialValue={note.highlight}
+      value={note.highlight}
       placeholder={'Insert your highlight from the book here . . .'}
+      on:save={({ detail: content }) => (note.highlight = content)}
     />
-    {#if expanded}
-      <ChevronDown on:expand={handleEvent} />
-    {:else}
-      <ChevronLeft on:expand={handleEvent} />
+    <ChevronButtons {expanded} direction={'left'} on:expand={() => (expanded = !expanded)} />
+    {#if $editable}
+      <DeleteButton id={{ note: note.id, chapter: chapterID }} type={'note'} />
     {/if}
   </div>
   {#if expanded}
     <div class="my-notes {note.note_type}">
       <TextArea
-        {editable}
         id={`${chapterID}-${note.id}-notes`}
-        initialValue={note.content}
+        value={note.content}
         placeholder={'Insert your notes about this highlight here . . .'}
+        on:save={({ detail: content }) => (note.content = content)}
       />
-    </div>
-  {/if}
-  {#if editable}
-    <div transition:fly={{ x: -40, duration: 500 }} class="trash">
-      <DeleteButton objectType={'note'} callback={() => activeBook.deleteNote(chapterID, note.id)} />
     </div>
   {/if}
 </div>
@@ -72,15 +60,6 @@
     min-width: 100px;
     color: rgba(252, 248, 201, 0.856);
     text-align: center;
-  }
-  .trash {
-    position: absolute;
-    right: -90px;
-    height: 1.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1.5rem;
-    z-index: 1;
   }
   .my-notes {
     width: 80%;

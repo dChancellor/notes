@@ -5,33 +5,49 @@
   import { circInOut } from 'svelte/easing';
   import PinButton from '../components/SubComponents/PinButton.svelte';
 
+  let outerWidth;
+  let showSidebar = false;
   $: isActive = (book) => book.isbn === $activeBook?.isbn;
   $: isPinned = (book) => $pins.includes(book.isbn);
 </script>
 
-<div class="sidebar">
-  <input bind:value={$filter} class="filter" placeholder="Filter by title.." />
-  <div class="books">
-    {#each $filtered as book (book.isbn)}
-      <div
-        animate:flip={{ duration: 500, easing: circInOut }}
-        class="book"
-        class:isActive={isActive(book)}
-        class:isPinned={isPinned(book)}
-        on:click={() => (isActive(book) ? activeBook.clear() : activeBook.activate(book))}
-      >
-        <h3 class="book-title">{book.title}</h3>
-        {#each book.authors.slice(0, 2) as author}
-          <p class="author">{author}</p>
-        {/each}
-        {#if isActive(book) || isPinned(book)}
-          <PinButton {book} isPinned={isPinned(book)} />
-        {/if}
-      </div>
-    {/each}
+<svelte:window bind:outerWidth />
+
+{#if outerWidth < 900}
+  <div on:click={() => (showSidebar = true)} class="hamburger">
+    <svg xmlns="http://www.w3.org/2000/svg" class="hamburger-icon" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
   </div>
-  <button class={'add-book'} on:click={() => modal.show('add-book')}>Add New Book</button>
-</div>
+  {#if showSidebar}
+    <div on:click={() => (showSidebar = false)} class="shroud" />
+  {/if}
+{/if}
+{#if outerWidth > 900 || showSidebar === true}
+  <div class="sidebar">
+    <input bind:value={$filter} class="filter" placeholder="Filter by title.." />
+    <div class="books">
+      {#each $filtered as book (book.isbn)}
+        <div
+          animate:flip={{ duration: 500, easing: circInOut }}
+          class="book"
+          class:isActive={isActive(book)}
+          class:isPinned={isPinned(book)}
+          on:click={() => (isActive(book) ? activeBook.clear() : activeBook.activate(book))}
+        >
+          <h3 class="book-title">{book.title}</h3>
+          {#each book.authors.slice(0, 2) as author}
+            <p class="author">{author}</p>
+          {/each}
+          {#if isActive(book) || isPinned(book)}
+            <PinButton {book} isPinned={isPinned(book)} />
+          {/if}
+        </div>
+      {/each}
+    </div>
+    <button class={'add-book'} on:click={() => modal.show({ variant: 'add-book' })}>Add New Book</button>
+  </div>
+{/if}
 
 <style>
   .sidebar {
@@ -43,11 +59,35 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+    z-index: 999;
   }
-  @media (max-width: 900px) {
+  @media screen (max-width: 900px) {
     .sidebar {
-      display: none;
+      width: 200%;
     }
+  }
+  .hamburger {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    height: 2rem;
+    width: 2rem;
+    cursor: pointer;
+  }
+  .hamburger-icon {
+    stroke: aqua;
+  }
+  .hamburger:hover {
+    filter: brightness(150%);
+  }
+  .shroud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: hsl(0, 0%, 7%, 0.9);
+    z-index: 998;
   }
   .filter {
     width: 90%;

@@ -8,6 +8,7 @@ const colorScheme = {
     darkText: "#E5CC83",
     textAreaDropShadow: "4px 4px 4px 0px #00000025",
     textAreaInsetShadow: "inset 0px 0px 3px 4px #00000025",
+    aquaGradient: "linear-gradient(#e068fe, #a552e2)"
   },
   sidebar: {
     background: "linear-gradient(#292929, #272727)",

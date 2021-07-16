@@ -1,9 +1,12 @@
 <script>
   import { editable, activeBook } from '../../lib/storeBook';
-  // $: !$editable && console.log('Save this book state =>', $activeBook);
+  function click() {
+    if ($editable) activeBook.save();
+    $editable = !$editable;
+  }
 </script>
 
-<div on:click|stopPropagation={() => ($editable = !$editable)} class="edit-container">
+<div on:click|stopPropagation={() => click()} class="edit-container">
   {#if !$editable}
     <svg xmlns="http://www.w3.org/2000/svg" class="button edit" viewBox="0 0 20 20" fill="currentColor">
       <title>A chapter edit button.</title>
@@ -15,7 +18,12 @@
       />
     </svg>
   {:else}
-    <svg xmlns="http://www.w3.org/2000/svg" class="button save" viewBox="0 0 20 20" fill="currentColor">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="button save"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
       <title>A chapter save edits button.</title>
       <path
         fillRule="evenodd"

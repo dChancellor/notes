@@ -1,13 +1,14 @@
 <script>
   import { fly, fade } from 'svelte/transition';
   import { modal } from '../../lib/storeModal';
-  export let object;
+  export let type;
+  export let id;
 </script>
 
 <div class="trash" transition:fly={{ x: -40, duration: 500 }}>
   <svg
     out:fade={{ duration: 200 }}
-    on:click={() => modal.show('Delete')}
+    on:click={() => modal.show({ variant: 'delete', data: { type, id } })}
     xmlns="http://www.w3.org/2000/svg"
     class="delete"
     fill="none"

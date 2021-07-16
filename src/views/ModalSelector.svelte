@@ -2,7 +2,8 @@
   import { modal } from '../lib/storeModal';
   import Delete from '../components/Modals/Delete.svelte';
   import AddBook from '../components/Modals/AddBook.svelte';
-  
+
+  $: data = $modal.data ? $modal.data : {};
   const modals = [
     { name: 'add-book', component: AddBook },
     { name: 'delete', component: Delete },
@@ -11,7 +12,7 @@
 </script>
 
 <div on:click={modal.hide} class="backdrop" />
-<svelte:component this={selected.component} />
+<svelte:component this={selected.component} {data} />
 
 <style>
   .backdrop {

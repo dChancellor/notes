@@ -19,7 +19,7 @@ export const noteTypes = [
   },
 ];
 
-// TODO - Refactor this to take in a color and dynmically change background opacity to 0
+// TODO - Refactor this to take in a color and dynamically change background opacity to 0
 export function bgFade(node, params) {
   return {
     delay: params.delay || 0,

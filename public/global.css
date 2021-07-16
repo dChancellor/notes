@@ -22,19 +22,6 @@ p {
   font-family: "Poppins", sans-serif;
 }
 
-a {
-  color: rgb(0, 100, 200);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-a:visited {
-  color: rgb(0, 80, 160);
-}
-
 label {
   display: block;
 }
@@ -43,31 +30,13 @@ input,
 button,
 select,
 textarea {
-  font-family: inherit;
+  font-family: "Poppins", sans-serif;
   font-size: inherit;
   box-sizing: border-box;
 }
 
-input:disabled {
-  color: #ccc;
-}
-
 button {
-  color: #333;
-  background-color: #f4f4f4;
   outline: none;
   all: revert;
   border: none;
-}
-
-button:disabled {
-  color: #999;
-}
-
-button:not(:disabled):active {
-  background-color: #ddd;
-}
-
-button:focus {
-  border-color: #666;
 }
