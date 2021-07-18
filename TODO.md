@@ -2,12 +2,16 @@ FOR PORTFOLIO
 
 [ ] - Add Books Modal
 [ ] - Input Notes from Calibre Modal
-[ ] - Set up Mongo
 [>] - Set up 3 different modes - my personal mode, small number of books(20?), large number of books(400)
 
-[ ] - Design neon book logo
 [ ] - Loading animation
 
+[ ] - Add New Book background-color to gradient
+
+[x] - Fix hard to read authors text and add new note button text
+[x] - Try and make somewhat more mobile friendly
+[x] - Change TextAreas to contentEditable components
+[x] - Design neon book logo
 [x] - Fix Delete Modal
 [x] - Delete a book
 [x] - Add sidebar phone responsiveness
@@ -20,9 +24,9 @@ FOR PORTFOLIO
 
 FOR BOOKWISE
 
-[ ] - Figure out mobile - completely separate files or try and make this responsive?
+[ ] - Figure out mobile - completely separate files or try and make this responsive? - Draggable elements on mobile
 [ ] - Connect to database/samwise
 [ ] - Reference another note inside a note
 [ ] - Select either manual or Google Books API
 [ ] - Add tags, summary and image_url functionality
-
+[ ] - Make better logo

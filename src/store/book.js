@@ -3,20 +3,8 @@
 import { writable, derived } from "svelte/store";
 import { v4 as uuidv4 } from "uuid";
 
-import notesJSON from "../../SHORT_DATA";
-import dbShort from "../../SHORT_DATA_SMALL";
-// import dbLong from "../../LONG_DATA";
-// import dbPersonal from "../../PERSONAL_DATA";
-
-// REVIEW This will be deleted with the DB call
-let dbPins = dbShort.reduce((arr, book) => {
-  if (book.pinned) arr.push(book.isbn);
-  return arr;
-}, []);
-//  REVIEW This will also be deleted with DB call
-let dbActive = notesJSON.find((book) => book.active);
-//  REVIEW This will also be delete with the DB call
-let findActive = (book) => notesJSON.find(({ isbn }) => isbn === book.isbn);
+import notesJSON from "../data/SHORT_DATA";
+import dbShort from "../data/SHORT_DATA_SMALL";
 
 const syncDB = {
   create: (book, message) => console.log(message, book),
@@ -43,19 +31,7 @@ function getBooks() {
         return books;
       }),
     // REVIEW This will be deleted in production
-    // TODO Set this to varying fetch calls so user doesn't need to download all 3 JSON on initial load
-    // TODO Set up a Mongo DB to catch X amount of books || those tagged with my actual notes
-    swap: (input) =>
-      update(() => {
-        switch (input) {
-          case "short":
-            return dbShort;
-          case "long":
-          // return dbLong;
-          case "personal":
-          // return dbPersonal;
-        }
-      }),
+    swap: (books) => set(books),
   };
 }
 
@@ -64,6 +40,12 @@ export const books = getBooks();
 export const filter = writable("");
 
 function handlePins() {
+  // REVIEW This will be deleted with the DB call
+  let dbPins = dbShort.reduce((arr, book) => {
+    if (book.pinned) arr.push(book.isbn);
+    return arr;
+  }, []);
+  // REVIEW Set this default to the result of a DB query
   const { subscribe, update } = writable(dbPins);
   return {
     subscribe,
@@ -84,12 +66,30 @@ function handlePins() {
         return pins;
       });
     },
+    // REVIEW Maybe don't need this one in production?
+    sync: (books) => {
+      let pins = books.reduce((arr, book) => {
+        if (book.pinned) arr.push(book.isbn);
+        return arr;
+      }, []);
+      set(pins);
+    },
   };
 }
 
 export const pins = handlePins();
 
+let findActive = (book) => notesJSON.find(({ isbn }) => isbn === book.isbn);
+
+export const devActive = derived([books], ([$books]) => {
+  return $books.filter((book) => book.active === true);
+});
+
 function handleBook() {
+  //  REVIEW This will be deleted with DB call
+  let dbActive = notesJSON.find((book) => book.active);
+  //  REVIEW This will also be delete with the DB call
+  // REVIEW Set this default to the result of a DB query
   const { subscribe, set, update } = writable(dbActive);
   return {
     subscribe,
@@ -115,6 +115,11 @@ function handleBook() {
         // TODO - Change this to get from MongoDB
         return findActive(book);
       }),
+    // REVIEW This probably is not necessary for production?
+    // REVIEW ...This broke everything
+    // set: (books) => {
+    //   set();
+    // },
     clear: () => set(),
     reorder: (chapters) =>
       update((book) => {

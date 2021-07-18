@@ -1,5 +1,5 @@
 <script>
-  import { pins } from '../../lib/storeBook';
+  import { pins } from '../../store/book';
 
   export let book;
   export let isPinned;

@@ -1,6 +1,6 @@
 <script>
-  import { pins, activeBook, filter, filtered } from '../lib/storeBook';
-  import { modal } from '../lib/storeModal';
+  import { pins, activeBook, filter, filtered } from '../store/book';
+  import { modal } from '../store/modal';
   import { flip } from 'svelte/animate';
   import { circInOut } from 'svelte/easing';
   import PinButton from '../components/SubComponents/PinButton.svelte';
@@ -13,6 +13,7 @@
 
 <svelte:window bind:outerWidth />
 
+<!-- REVIEW - Edit this for cleaner -->
 {#if outerWidth < 900}
   <div on:click={() => (showSidebar = true)} class="hamburger">
     <svg xmlns="http://www.w3.org/2000/svg" class="hamburger-icon" viewBox="0 0 24 24">
@@ -25,6 +26,7 @@
 {/if}
 {#if outerWidth > 900 || showSidebar === true}
   <div class="sidebar">
+    <img src="build/Logo.png" alt="Bookwise Logo" class="logo" />
     <input bind:value={$filter} class="filter" placeholder="Filter by title.." />
     <div class="books">
       {#each $filtered as book (book.isbn)}
@@ -50,6 +52,11 @@
 {/if}
 
 <style>
+  .logo {
+    height: auto;
+    width: 9rem;
+    margin-top: 1rem;
+  }
   .sidebar {
     width: min(70%, 20rem);
     height: 100%;
@@ -59,9 +66,10 @@
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+    align-items: center;
     z-index: 999;
   }
-  @media screen (max-width: 900px) {
+  @media screen and (max-width: 800px) {
     .sidebar {
       width: 200%;
     }
@@ -92,7 +100,7 @@
   .filter {
     width: 90%;
     height: 2.5rem;
-    margin: 1.25rem 0.8rem;
+    margin: 0rem 0.8rem 1.25rem 0.8rem;
     border: none;
     border-radius: 5px;
     text-align: center;

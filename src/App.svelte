@@ -1,7 +1,7 @@
 <script>
-  import { books } from './lib/storeBook';
-  import { modal } from './lib/storeModal';
-  import { theme } from './lib/storeTheme';
+  import { books } from './store/book';
+  import { modal } from './store/modal';
+  import { theme } from './store/theme';
   import Modal from './views/ModalSelector.svelte';
   import Sidebar from './views/Sidebar.svelte';
   import Book from './views/ActiveBook.svelte';
@@ -81,7 +81,7 @@
   .portfolio-button:hover {
     filter: brightness(150%);
   }
-  @media screen (max-width: 900px) {
+  @media screen and (max-width: 900px) {
     .portfolio-bar {
       width: auto;
       margin: 1rem 1rem;

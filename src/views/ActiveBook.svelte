@@ -1,11 +1,10 @@
 <script>
   import { fade } from 'svelte/transition';
-  import { activeBook, editable } from '../lib/storeBook';
-  import { bgFade } from '../lib/dictionary';
-  import Chapters from '../lib/SortableList.svelte';
+  import { activeBook, editable } from '../store/book';
+  import Chapters from '../components/SortableChapters.svelte';
   import EditToggleButton from '../components/SubComponents/EditButton.svelte';
   import DeleteButton from '../components/SubComponents/DeleteButton.svelte';
-  let transitionReady = true;
+  import TextField from '../components/SubComponents/TextField.svelte';
 </script>
 
 <div class="app">
@@ -13,27 +12,20 @@
     <h2 in:fade={{ duration: 500 }} class="no-active-book">Select a book on the left to get started</h2>
   {:else}
     <div class="header" out:fade={{ duration: 500 }}>
-      <EditToggleButton />
-      <!-- REVIEW This is ugly, would like to transition this to a single HTML element or my Textarea/Span fix -->
-      {#if !$editable && transitionReady}
-        <div class="title">
-          {$activeBook.title}
-        </div>
-      {:else if $editable}
-        <div
-          transition:bgFade
-          on:introstart={() => (transitionReady = false)}
-          on:outroend={() => (transitionReady = true)}
-          class="editable title"
-          contenteditable="true"
-          bind:textContent={$activeBook.title}
-          on:blur={() => $activeBook.save}
-        />
-        <div class="trash-container">
+      <div class="edit-container">
+        <EditToggleButton />
+      </div>
+      <TextField
+        placeholder={'Unnamed Book'}
+        textContent={$activeBook.title}
+        id={`active-book-title`}
+        on:save={({ detail: content }) => ($activeBook.title = content)}
+      />
+      {#if $editable}
+        <div class="delete-container">
           <DeleteButton type={'book'} id={$activeBook.isbn} />
         </div>
       {/if}
-      <!-- END REVIEW -->
       <button on:click={activeBook.addChapter} class="add-chapter-button">Add Chapter</button>
     </div>
     <!-- REVIEW Perhaps clean this up and re-make it into universal tooling. But this works for now -->
@@ -51,34 +43,18 @@
   }
   .header {
     display: flex;
-    flex-flow: row nowrap;
     align-items: center;
-    width: 80%;
+    width: 90%;
     position: relative;
     margin-bottom: 1.5rem;
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: 800;
   }
-  @media screen (max-width: 900px) {
+  @media screen and (max-width: 900px) {
     .header {
       margin-left: 4rem;
       width: 75%;
     }
-  }
-  .title {
-    margin-left: 0.4rem;
-    color: var(--clr-main-lightText);
-    background-color: var(--clr-main-background);
-    font-size: clamp(1.7rem, 4vw, 2.5rem);
-    padding: 0.4rem 1rem 0.4rem 1rem;
-    max-width: 65%;
-  }
-  .title.editable {
-    background-color: var(--clr-sidebar-searchBox);
-    box-shadow: var(--clr-main-textAreaInsetShadow);
-    border-radius: 5px;
-  }
-  .title:focus {
-    box-shadow: var(--clr-main-textAreaDropShadow);
-    outline: none;
   }
   .no-active-book {
     position: absolute;
@@ -86,10 +62,16 @@
     left: 50%;
     transform: translate(-50%, -50%);
   }
-  .trash-container {
+  .delete-container {
     position: relative;
-    display: flex;
-    align-items: center;
+    height: 1.5rem;
+    width: 1.5rem;
+    right: 1rem;
+  }
+  .edit-container {
+    position: absolute;
+    height: 1.5rem;
+    width: 1.5rem;
   }
   .add-chapter-button {
     padding: 0.7rem 1.8rem;

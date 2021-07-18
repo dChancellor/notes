@@ -1,14 +1,14 @@
 <script>
-  import { editable, activeBook } from '../../lib/storeBook';
+  import { editable, activeBook } from '../../store/book';
   function click() {
     if ($editable) activeBook.save();
     $editable = !$editable;
   }
 </script>
 
-<div on:click|stopPropagation={() => click()} class="edit-container">
+<div on:click|stopPropagation={() => click()} class="edit-button">
   {#if !$editable}
-    <svg xmlns="http://www.w3.org/2000/svg" class="button edit" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg edit" viewBox="0 0 20 20" fill="currentColor">
       <title>A chapter edit button.</title>
       <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
       <path
@@ -18,12 +18,7 @@
       />
     </svg>
   {:else}
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="button save"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-    >
+    <svg xmlns="http://www.w3.org/2000/svg" class="svg save" viewBox="0 0 20 20" fill="currentColor">
       <title>A chapter save edits button.</title>
       <path
         fillRule="evenodd"
@@ -35,15 +30,18 @@
 </div>
 
 <style>
-  .edit-container {
+  .edit-button {
+    right: 0%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    margin-right: 1.7rem;
+  }
+  .svg {
     height: 1.5rem;
-  }
-  .button {
-    height: 100%;
     cursor: pointer;
-    filter: invert(30%);
   }
-  .button:hover {
+  .svg:hover {
     filter: drop-shadow(0px 0px 3px 4px #d4d4d456), brightness(150%);
     -webkit-filter: drop-shadow(0px 0px 5px #d4d4d456);
   }
@@ -51,7 +49,6 @@
     fill: rgba(221, 221, 221, 0.411);
   }
   .save {
-    filter: invert(30%);
     fill: rgb(0, 151, 0);
   }
 </style>

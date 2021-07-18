@@ -1,12 +1,11 @@
 <script>
   import { fade } from 'svelte/transition';
   import { noteTypes } from '../lib/dictionary';
-  import { activeBook, editable } from '../lib/storeBook';
+  import { activeBook, editable } from '../store/book';
   import ChevronButtons from './SubComponents/ChevronButtons.svelte';
   import DeleteButton from './SubComponents/DeleteButton.svelte';
-  import DraggableDots from './SubComponents/DraggableDots.svelte';
   import EditButton from './SubComponents/EditButton.svelte';
-  import TextArea from './SubComponents/TextArea.svelte';
+  import TextField from './SubComponents/TextField.svelte';
   import Note from './Note.svelte';
   export let chapter;
 
@@ -16,16 +15,26 @@
 <div class="chapter" in:fade={{ duration: 200 }}>
   <div class="prefold">
     <ChevronButtons direction={'right'} {expanded} on:expand={() => (expanded = !expanded)} />
-    <h2 class="chapter-header">Chapter {chapter.chapter_number}: &nbsp; {chapter.title}</h2>
-    <TextArea
-      placeholder={'Enter your chapter summary here. . .'}
-      value={chapter.summary}
-      id={`${chapter.id}-summary`}
-      on:save={({ detail: content }) => (chapter.summary = content)}
-    />
+    <div class="chapter-content">
+      <h2 class="chapter-header">
+        Chapter &nbsp; {chapter.chapter_number}: &nbsp;
+        <TextField
+          id={`${chapter.id}-title`}
+          textContent={chapter.title}
+          noBG={true}
+          placeholder={'Enter a chapter title. . .'}
+          on:save={({ detail: content }) => (chapter.title = content)}
+        />
+      </h2>
+      <TextField
+        placeholder={'Enter your chapter summary here. . .'}
+        textContent={chapter.summary}
+        id={`${chapter.id}-summary`}
+        on:save={({ detail: content }) => (chapter.summary = content)}
+      />
+    </div>
     <EditButton />
     {#if $editable}
-      <DraggableDots />
       <DeleteButton id={chapter.id} type={'chapter'} />
     {/if}
   </div>
@@ -58,9 +67,8 @@
     flex-flow: column nowrap;
     width: 90%;
     margin: 1rem 0;
-    z-index: 2;
-    position: relative;
     color: var(--clr-main-lightText);
+    padding-left: 1rem;
   }
   .prefold {
     background-image: var(--clr-sidebar-background);
@@ -68,11 +76,29 @@
     padding: 0.8rem 1.2rem;
     box-shadow: var(--clr-main-textAreaDropShadow);
     display: flex;
-    flex-flow: row nowrap;
     align-items: center;
     margin: 0.5rem 0 0.5rem -0.5rem;
     position: relative;
-    font-size: clamp(0.7rem, 1.2vw, 1rem);
+    min-height: 3rem;
+  }
+  .chapter-content {
+    display: flex;
+    align-items: center;
+    margin-left: 2.4rem;
+    font-size: clamp(0.8rem, 0.7vw, 1rem);
+    gap: 0.4rem;
+    width: 90%;
+  }
+  .chapter-header {
+    font-size: clamp(1rem, 1.3vw, 1.4rem);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .edit-container {
+    height: 1.5rem;
+    right: 4%;
+    position: absolute;
   }
   .addNew-container {
     display: flex;
@@ -86,7 +112,11 @@
   .addNew-container p {
     margin: 0.8rem;
   }
-  @media screen (max-width: 990px) {
+  @media screen and (max-width: 990px) {
+    .chapter-content {
+      flex-flow: row wrap;
+      width: 80%;
+    }
     .addNew-container {
       justify-content: space-evenly;
     }
@@ -103,7 +133,7 @@
     filter: contrast(70%);
     box-shadow: var(--clr-main-textAreaDropShadow);
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
   }
   .addNew-button:hover {
     filter: brightness(150%);
@@ -129,7 +159,7 @@
   .note-container {
     display: flex;
     flex-flow: column nowrap;
-    gap: 0.1rem;
+    gap: 0.4rem;
     margin-top: 1rem;
   }
 </style>

@@ -39,10 +39,12 @@
 <style>
   .chevron-container {
     margin-right: 0.2rem;
-    display: flex;
-    align-content: center;
     fill: var(--clr-main-lightText);
     cursor: pointer;
+    height: 2rem;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
   .chevron {
     height: 2rem;

@@ -1,6 +1,6 @@
 <script>
-  import { modal } from '../../lib/storeModal';
-  import { activeBook, books } from '../../lib/storeBook';
+  import { modal } from '../../store/modal';
+  import { activeBook, books } from '../../store/book';
   export let data;
 
   function del() {

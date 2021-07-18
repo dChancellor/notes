@@ -8,20 +8,21 @@ const colorScheme = {
     darkText: "#E5CC83",
     textAreaDropShadow: "4px 4px 4px 0px #00000025",
     textAreaInsetShadow: "inset 0px 0px 3px 4px #00000025",
-    aquaGradient: "linear-gradient(#e068fe, #a552e2)"
+    aquaGradient: "linear-gradient(#e068fe, #a552e2)",
   },
   sidebar: {
     background: "linear-gradient(#292929, #272727)",
     pinnedBook: "#157A6E",
     activeBook: "#693391",
     defaultBook: "",
-    authorText: "#7d7d7d",
+    authorText: "#b6ac92",
     searchBox: "#414141",
     scrollThumb: "#00ffff",
     scrollBackground: "#212121",
     unlocked: "#e2d2d6",
     locked: "#272727",
     activeGradient: "linear-gradient(#e068fe, #a552e2)",
+    // activeGradient: "linear-gradient(hsl(308, 58%, 88%), hsl(308, 98%, 68%))",
     pinnedGradient: "linear-gradient(#9cb07b, #59983b)",
     bookwise: "linear-gradient(to right, #53E38D, #DC66FC)",
     newbook: "#1fb3b3",
@@ -40,17 +41,23 @@ const colorScheme = {
   },
 };
 
-function colorTheme() {
-  let res = Object.entries(colorScheme).reduce((str, [section, value]) => {
-    let themeSection = Object.entries(value).reduce((str, [key, value]) => {
-      return (str += `--clr-${section}-${key}: ${value}; `);
-    }, "");
-    return (str += themeSection);
-  }, "");
-  const { subscribe } = readable(res);
+function colorThemeReducer() {
+  let themeReducedString = Object.entries(colorScheme).reduce(
+    (str, [section, values]) => {
+      let stringReducedSection = sectionToColorStringReducer(values, section);
+      return (str += stringReducedSection);
+    },
+    ""
+  );
+  const { subscribe } = readable(themeReducedString);
   return {
     subscribe,
   };
 }
 
-export const theme = colorTheme();
+const sectionToColorStringReducer = (values, section) =>
+  Object.entries(values).reduce((str, [key, value]) => {
+    return (str += `--clr-${section}-${key}: ${value}; `);
+  }, "");
+
+export const theme = colorThemeReducer();

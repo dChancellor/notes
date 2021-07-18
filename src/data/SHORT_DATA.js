@@ -13,7 +13,7 @@ export default [
     chapters: [
       {
         id: "e818282d-825a-47d6-a58b-2a0de5fb6453",
-        title: "Lemming, arctic",
+        title: "",
         chapter_number: 1,
         sort_order: 1,
         summary: "Aliquam quis turpis eget elit sodales scelerisque.",

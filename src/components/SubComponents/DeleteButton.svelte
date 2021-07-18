@@ -1,11 +1,11 @@
 <script>
   import { fly, fade } from 'svelte/transition';
-  import { modal } from '../../lib/storeModal';
+  import { modal } from '../../store/modal';
   export let type;
   export let id;
 </script>
 
-<div class="trash" transition:fly={{ x: -40, duration: 500 }}>
+<div class="trash-container" transition:fly={{ x: -40, duration: 500 }}>
   <svg
     out:fade={{ duration: 200 }}
     on:click={() => modal.show({ variant: 'delete', data: { type, id } })}
@@ -25,15 +25,17 @@
 </div>
 
 <style>
-  .trash {
+  .trash-container {
     position: absolute;
-    height: 1.5rem;
-    width: 1.5rem;
-    right: -38px;
+    display: flex;
+    align-items: center;
+    margin-right: 1.7rem;
+    right: -4rem;
   }
   .delete {
     cursor: pointer;
     color: #8f1818;
+    height: 1.5rem;
   }
   .delete:hover {
     filter: brightness(200%);
