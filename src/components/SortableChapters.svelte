@@ -16,7 +16,6 @@
     ev.preventDefault();
     let dragged = getDraggedParent(ev.target);
     if (isOver !== dragged.id) isOver = JSON.parse(dragged.id);
-    console.log(isOver);
   };
   const leave = (ev) => {
     let dragged = getDraggedParent(ev.target);

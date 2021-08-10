@@ -26,7 +26,6 @@
 {/if}
 {#if outerWidth > 900 || showSidebar === true}
   <div class="sidebar">
-    <img src="build/Logo.png" alt="Bookwise Logo" class="logo" />
     <input bind:value={$filter} class="filter" placeholder="Filter by title.." />
     <div class="books">
       {#each $filtered as book (book.isbn)}
@@ -47,16 +46,11 @@
         </div>
       {/each}
     </div>
-    <button class={'add-book'} on:click={() => modal.show({ variant: 'add-book' })}>Add New Book</button>
+    <!-- <button class={'add-book'} on:click={() => modal.show({ variant: 'add-book' })}>Add New Book</button> -->
   </div>
 {/if}
 
 <style>
-  .logo {
-    height: auto;
-    width: 9rem;
-    margin-top: 1rem;
-  }
   .sidebar {
     width: min(70%, 20rem);
     height: 100%;
@@ -65,7 +59,7 @@
     padding-right: 5px;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     z-index: 999;
   }
@@ -116,7 +110,7 @@
     box-shadow: var(--clr-main-textAreaDropShadow);
     outline: none;
   }
-  .add-book {
+  /* .add-book {
     padding: 1rem 2rem;
     margin-bottom: 1rem;
     background-color: var(--clr-sidebar-newbook);
@@ -130,13 +124,13 @@
   }
   .add-book:hover {
     filter: brightness(150%);
-  }
+  } */
   .books {
     overflow-y: auto;
     display: flex;
     flex-flow: column nowrap;
     user-select: none;
-    height: calc(100vh - 12rem);
+    /* height: calc(100vh - 12rem); */
     scrollbar-color: var(--clr-sidebar-scrollThumb) var(--clr-sidebar-scrollBackground);
     scrollbar-width: thin;
   }

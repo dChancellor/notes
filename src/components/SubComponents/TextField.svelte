@@ -36,6 +36,7 @@
     padding: 0.4rem 1rem 0.4rem 1rem;
     border-radius: 5px;
     background-color: var(--clr-main-background);
+    min-height: 1rem;
   }
   .field:not(.header > .field) {
     flex-grow: 2;
